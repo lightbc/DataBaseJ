@@ -1,7 +1,7 @@
 # DataBaseJ
 ## 一、数据处理工具
 
-<h3>Chinese description:</h3>
+<h3>English description:</h3>
 <p>DataBaseJ is a database data processing plugin. Based on DataBase Tools plugin development.</p>
 <p>Solutions to related issues encountered in database data processing during daily development.</p>
 
