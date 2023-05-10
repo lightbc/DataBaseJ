@@ -1,0 +1,53 @@
+<idea-plugin>
+    <id>com.lightbc.databasej</id>
+    <name>DataBaseJ</name>
+    <version>1.0.0</version>
+    <vendor email="lightbc@163.com" url="https://www.cnblogs.com/lightbc">lightbc</vendor>
+
+    <description>
+        <![CDATA[
+          <h3>Chinese description:</h3>
+          <p>DataBaseJ is a database data processing plugin. Based on DataBase Tools plugin development.</p>
+          <p>Solutions to related issues encountered in database data processing during daily development.</p>
+
+          <h3>中文描述:</h3>
+          <p>DataBaseJ是一款数据库数据处理插件。基于DataBase Tools插件开发。</p>
+          <p>日常开发中数据库数据处理遇到的相关问题解决方案。</p>
+        ]]>
+    </description>
+
+    <change-notes>
+        <![CDATA[
+         <h3>v1.0.0</h3>
+         <ol>
+         <li>基于DataBase Tools插件。</li>
+         <li>根据console查询SQL执行结果导出查询结果集。</li>
+         </ol>
+        ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <depends>com.intellij.modules.database</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <group id="Com.Lightbc.DataBaseJ" class="com.lightbc.databasej.actions.DataBaseJGroup" popup="true"
+               text="DataBaseJ">
+            <add-to-group group-id="Console.TableResult.Options" anchor="first"/>
+        </group>
+    </actions>
+
+</idea-plugin>
