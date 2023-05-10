@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * 反射调用工具类
  */
-class ReflectUtil {
+public class ReflectUtil {
     private Method method;
 
     /**
@@ -21,7 +21,7 @@ class ReflectUtil {
      * @param parameters 方法传参
      * @return this
      */
-    ReflectUtil getMethod(@NotNull Class<?> aClass, @NonNls @NotNull String name, @NotNull Class... parameters) {
+    public ReflectUtil getMethod(@NotNull Class<?> aClass, @NonNls @NotNull String name, @NotNull Class... parameters) {
         this.method = ReflectionUtil.getMethod(aClass, name, parameters);
         return this;
     }
@@ -35,7 +35,7 @@ class ReflectUtil {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    Object invoke(Object obj, Object... args) throws InvocationTargetException, IllegalAccessException {
+    public Object invoke(Object obj, Object... args) throws InvocationTargetException, IllegalAccessException {
         return method.invoke(obj, args);
     }
 
