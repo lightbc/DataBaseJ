@@ -17,4 +17,3 @@
 
 ## 三、作者
 <p>Author:<a href="https://www.cnblogs.com/lightbc/">lightbc</a></p>
-    <p>GitHub:<a href="https://github.com/lightbc/DataBaseJ">https://github.com/lightbc/DataBaseJ</a></p>
