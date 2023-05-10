@@ -74,11 +74,10 @@ public class HelpAction extends AnAction {
             for (String image : images) {
                 int lastIndex = image.lastIndexOf("/");
                 if (lastIndex != -1) {
-                    // 获取文件路径
-                    String imageDir = image.substring(0, lastIndex);
-                    // 获取完整缓存路径
-                    String imagePath = cacheDir.concat(imageDir);
                     // 缓存图片
+                    image = processPath(image);
+                    // 获取完整缓存路径
+                    String imagePath = cacheDir.concat(image);
                     fileUtil.cacheFile(image, imagePath);
                 }
             }
@@ -108,6 +107,22 @@ public class HelpAction extends AnAction {
             }
         }
         return src;
+    }
+
+    /**
+     * 处理路中的上级目录../表示的问题
+     *
+     * @param path 路径
+     * @return string 处理结果
+     */
+    private String processPath(String path) {
+        String n = "../";
+        int i = path.lastIndexOf(n);
+        int begin = 0;
+        if (i != -1) {
+            begin = i + n.length() - 1;
+        }
+        return path.substring(begin);
     }
 
     /**

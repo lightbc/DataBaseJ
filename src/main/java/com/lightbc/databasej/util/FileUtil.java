@@ -17,20 +17,22 @@ public class FileUtil {
         boolean flag = false;
         if (path != null && !"".equals(path.trim())) {
             // 判断是否是文件是否保存在当前盘的根目录下面
-            int count = StringUtils.getCharCount(path, '/');
+            int count = StringUtils.getCharCount(path, File.separatorChar);
             // 获取文件分隔符最后一次出现的位置
             int lastIndex = path.lastIndexOf("/");
             // 处理保存在文件夹下的文件创建
             if (count > 1) {
-                // 判断文件存放的上级文件目录是否存在，不存在则创建文件夹（多级判断）
-                String dirPath = path.substring(0, lastIndex);
-                File dirFile = new File(dirPath);
-                if (!dirFile.exists()) {
-                    dirFile.mkdirs();
-                    flag = true;
-                }
-                // 判断文件是否存在，不存在则创建文件
-                if (path.indexOf(".") != -1) {
+                int index = path.lastIndexOf("/");
+                String fileName = path.substring(index);
+                if (fileName.indexOf(".") != -1) {
+                    // 判断文件存放的上级文件目录是否存在，不存在则创建文件夹（多级判断）
+                    String dirPath = path.substring(0, lastIndex);
+                    File dirFile = new File(dirPath);
+                    if (!dirFile.exists()) {
+                        dirFile.mkdirs();
+                        flag = true;
+                    }
+                    // 判断文件是否存在，不存在则创建文件
                     File file = new File(path);
                     if (!file.exists()) {
                         try {
@@ -38,6 +40,13 @@ public class FileUtil {
                             flag = true;
                         } catch (IOException e) {
                         }
+                    }
+                } else {
+                    // 创建文件夹
+                    File dirFile = new File(path);
+                    if (!dirFile.exists()) {
+                        dirFile.mkdirs();
+                        flag = true;
                     }
                 }
             } else {
@@ -211,8 +220,8 @@ public class FileUtil {
                 fos.write(buffer, 0, len);
             }
             fos.flush();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (fos != null) {
@@ -225,6 +234,7 @@ public class FileUtil {
                     is.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
