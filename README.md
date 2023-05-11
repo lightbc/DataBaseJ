@@ -15,5 +15,8 @@
 <li>根据console查询SQL执行结果导出查询结果集。</li>
 </ol>
 
-## 三、作者
+## 三、功能展示
+<img src="https://blog-static.cnblogs.com/files/lightbc/databasej.gif"/>
+
+## 四、作者
 <p>Author:<a href="https://www.cnblogs.com/lightbc/">lightbc</a></p>
