@@ -74,10 +74,10 @@ public class HelpAction extends AnAction {
             for (String image : images) {
                 int lastIndex = image.lastIndexOf("/");
                 if (lastIndex != -1) {
-                    // 缓存图片
-                    image = processPath(image);
                     // 获取完整缓存路径
                     String imagePath = cacheDir.concat(image);
+                    // 缓存图片
+                    image = processPath(image);
                     fileUtil.cacheFile(image, imagePath);
                 }
             }

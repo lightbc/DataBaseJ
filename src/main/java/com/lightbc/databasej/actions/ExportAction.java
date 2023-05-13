@@ -7,10 +7,13 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.lightbc.databasej.ui.ExportDataUI;
 import com.lightbc.databasej.util.DialogUtil;
+import com.lightbc.databasej.util.ProjectUtil;
 import com.lightbc.databasej.util.ReflectUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * 查询结果导出
@@ -67,15 +70,12 @@ public class ExportAction extends AnAction {
             }
             // 填充标题
             map.put(0, header);
-            // 导出对话框
-            ExportDataUI exportDataUI = new ExportDataUI();
-            int r = DialogUtil.showConfirmDialog(null, exportDataUI.getMainPanel(), "Export Data");
-            // 确认操作
-            if (r == 0) {
-                // 获取操作的数据表表名
-                String tableName = DataGridUtil.getDatabaseTable(grid).getName();
-                exportDataUI.ok(tableName, map);
-            }
+            // 获取操作的数据表表名
+            String tableName = DataGridUtil.getDatabaseTable(grid).getName();
+            DialogUtil dialogUtil = new DialogUtil();
+            DialogUtil.CustomDialog customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
+            ExportDataUI exportDataUI = new ExportDataUI(tableName, map, customDialog);
+            customDialog.showDialog(null, exportDataUI.getMainPanel(), "Export Data", 500, 300);
         }
     }
 

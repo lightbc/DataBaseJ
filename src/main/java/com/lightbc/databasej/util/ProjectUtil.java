@@ -39,4 +39,33 @@ public class ProjectUtil {
             return project;
         }
     }
+
+    /**
+     * 获取当前活动窗体
+     *
+     * @return window 窗体
+     */
+    public static Window getWindow() {
+        Window w = null;
+        // 项目管理器
+        ProjectManager projectManager = ProjectManager.getInstance();
+        try {
+            // 所有打开的项目
+            Project[] projects = projectManager.getOpenProjects();
+            // 窗体管理器
+            WindowManager windowManager = WindowManager.getInstance();
+            if (projects.length > 0) {
+                for (Project p : projects) {
+                    // 判断当前活动窗体的打开项目
+                    Window window = windowManager.suggestParentWindow(p);
+                    if (window != null && window.isActive()) {
+                        w = window;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            return w;
+        }
+    }
 }

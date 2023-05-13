@@ -1,5 +1,7 @@
 package com.lightbc.databasej.util;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 /**
@@ -15,53 +17,40 @@ public class FileUtil {
      */
     public boolean create(String path) {
         boolean flag = false;
-        if (path != null && !"".equals(path.trim())) {
-            // 判断是否是文件是否保存在当前盘的根目录下面
-            int count = StringUtils.getCharCount(path, File.separatorChar);
-            // 获取文件分隔符最后一次出现的位置
-            int lastIndex = path.lastIndexOf("/");
-            // 处理保存在文件夹下的文件创建
-            if (count > 1) {
-                int index = path.lastIndexOf("/");
-                String fileName = path.substring(index);
-                if (fileName.indexOf(".") != -1) {
+        try {
+            if (path != null && !"".equals(path.trim())) {
+                // 判断是否是文件是否保存在当前盘的根目录下面
+                int count = StringUtils.getCharCount(path, '/');
+                // 获取文件分隔符最后一次出现的位置
+                int lastIndex = path.lastIndexOf("/");
+                // 处理保存在文件夹下的文件创建
+                if (count > 1) {
                     // 判断文件存放的上级文件目录是否存在，不存在则创建文件夹（多级判断）
                     String dirPath = path.substring(0, lastIndex);
                     File dirFile = new File(dirPath);
                     if (!dirFile.exists()) {
                         dirFile.mkdirs();
-                        flag = true;
                     }
                     // 判断文件是否存在，不存在则创建文件
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        try {
+                    if (path.indexOf(".") != -1) {
+                        File file = new File(path);
+                        if (!file.exists()) {
                             file.createNewFile();
-                            flag = true;
-                        } catch (IOException e) {
                         }
                     }
                 } else {
-                    // 创建文件夹
-                    File dirFile = new File(path);
-                    if (!dirFile.exists()) {
-                        dirFile.mkdirs();
-                        flag = true;
-                    }
-                }
-            } else {
-                // 处理保存在当前盘的根目录下的保存文件
-                File file = new File(path);
-                if (!file.exists()) {
-                    try {
+                    // 处理保存在当前盘的根目录下的保存文件
+                    File file = new File(path);
+                    if (!file.exists()) {
                         file.createNewFile();
-                        flag = true;
-                    } catch (IOException e) {
                     }
                 }
             }
+            flag = true;
+        } catch (IOException e) {
+        } finally {
+            return flag;
         }
-        return flag;
     }
 
     /**
@@ -131,7 +120,7 @@ public class FileUtil {
             StringBuilder builder = new StringBuilder();
             try {
                 fis = new FileInputStream(file);
-                isr = new InputStreamReader(fis);
+                isr = new InputStreamReader(fis, "UTF-8");
                 br = new BufferedReader(isr);
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -220,8 +209,8 @@ public class FileUtil {
                 fos.write(buffer, 0, len);
             }
             fos.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
         } finally {
             try {
                 if (fos != null) {
@@ -234,8 +223,112 @@ public class FileUtil {
                     is.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 根据输入流读取内容
+     *
+     * @param is 输入流
+     * @return string 读取内容
+     */
+    public String read(InputStream is) {
+        StringBuilder builder = new StringBuilder();
+        InputStreamReader isr = null;
+        BufferedReader br = null;
+        try {
+            isr = new InputStreamReader(is, "UTF-8");
+            br = new BufferedReader(isr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                builder.append(line).append("\n");
+            }
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (isr != null) {
+                    isr.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+            }
+            return builder.toString();
+        }
+    }
+
+    /**
+     * 根据输出流写入内容
+     *
+     * @param os      输出流
+     * @param content 写入内容
+     */
+    public void write(OutputStream os, String content) {
+        OutputStreamWriter osw = null;
+        BufferedWriter bw = null;
+        try {
+            osw = new OutputStreamWriter(os, "UTF-8");
+            bw = new BufferedWriter(osw);
+            bw.write(content);
+            bw.flush();
+            osw.flush();
+            os.flush();
+        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+                if (osw != null) {
+                    osw.close();
+                }
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    /**
+     * 获取图片对象
+     *
+     * @param relativePath 资源相对路径
+     * @return BufferedImage
+     * @throws IOException
+     */
+    public BufferedImage getImage(String relativePath) throws IOException {
+        return ImageIO.read(FileUtil.class.getResourceAsStream(relativePath));
+    }
+
+    /**
+     * 创建临时文件
+     *
+     * @param name       文件名称
+     * @param ext        文件后缀
+     * @param exportPath 导出路径
+     * @return file
+     * @throws IOException
+     */
+    public File createTempFile(String name, String ext, String exportPath) throws IOException {
+        exportPath = "C:/databasej_temp/";
+        String path = exportPath.concat(name).concat(ext);
+        return create(path) ? new File(path) : null;
+    }
+
+    /**
+     * 删除临时文件
+     *
+     * @param file 临时文件
+     * @return Boolean true-删除成功，false-删除失败
+     */
+    public boolean deleteTempFile(File file) {
+        return file.delete();
     }
 }

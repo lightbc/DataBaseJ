@@ -2,6 +2,7 @@ package com.lightbc.databasej.util;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,15 +13,32 @@ import java.util.Map;
  * Excel处理工具类
  */
 public class ExcelUtil {
+    // excel 2003
+    public static final String EXCEL03 = "Excel_2003";
+    // excel 2007
+    public static final String EXCEL07 = "Excel_2007";
 
     /**
-     * 导出Excel文件(2003)
+     * 写入Excel
      *
      * @param savePath 保存路径
      * @param map      导出数据
+     * @param type     Excel版本
      * @throws Exception
      */
-    public void writeExcel(String savePath, Map<Integer, List<Object>> map) throws Exception {
+    public void writeExcel(String savePath, Map<Integer, List<Object>> map, String type) throws Exception {
+        write(savePath, map, type);
+    }
+
+    /**
+     * 写入
+     *
+     * @param savePath 保存路径
+     * @param map      导出数据
+     * @param type     类型
+     * @throws Exception
+     */
+    private void write(String savePath, Map<Integer, List<Object>> map, String type) throws Exception {
         if (map == null) {
             throw new Exception("无处理数据存在！");
         }
@@ -28,12 +46,19 @@ public class ExcelUtil {
         int rows = map.keySet().size();
         // 获取导出数据的列数
         int cols = map.get(0).size();
+        Workbook workbook = null;
+        // Excel2003
+        if (type.trim().equals(EXCEL03)) {
+            workbook = excel2003();
+        }
+        // Excel2007
+        if (type.trim().equals(EXCEL07)) {
+            workbook = excel2007();
+        }
         // Excel（2003）
-        if (rows >= 65536) {
+        if (type.trim().equals(EXCEL03) && rows >= 65536) {
             throw new Exception("超过最大写入数据行,当前有【" + rows + "】行需要处理！");
         }
-        //创建工作簿
-        Workbook workbook = new HSSFWorkbook();
         // 创建工作表
         Sheet sheet = workbook.createSheet();
         // 创建单元格样式
@@ -71,6 +96,24 @@ public class ExcelUtil {
         workbook.write(fos);
         workbook.close();
         fos.close();
+    }
+
+    /**
+     * 获取Excel2003工作簿
+     *
+     * @return workbook
+     */
+    private Workbook excel2003() {
+        return new HSSFWorkbook();
+    }
+
+    /**
+     * 获取Excel2007工作薄
+     *
+     * @return workbook
+     */
+    private Workbook excel2007() {
+        return new SXSSFWorkbook();
     }
 
 }
