@@ -75,7 +75,10 @@ public class ExcelUtil {
             for (int j = 0; j < cols; j++) {
                 Object obj = list.get(j);
                 Cell cell = row.createCell(j);
-                String value = String.valueOf(obj);
+                String value = "";
+                if (obj != null) {
+                    value = String.valueOf(obj);
+                }
                 // 填充单元格数据
                 cell.setCellValue(value);
                 cell.setCellStyle(style);

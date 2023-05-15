@@ -36,7 +36,7 @@ public class ExportAction extends AnAction {
      */
     private void doAction(@NotNull AnActionEvent e) {
         DataGrid grid = DataGridUtil.getDataGrid(e.getDataContext());
-        if (grid != null) {
+        if (grid != null && grid.isReady()) {
             GridModel model = grid.getDataModel(DataAccessType.DATA_WITH_MUTATIONS);
             // 获取查询到的数据行
             List<DataConsumer.Row> rows = model.getRows();
@@ -56,8 +56,8 @@ public class ExportAction extends AnAction {
                     // 数据模型列下标
                     ModelIndex colIndex = ModelIndex.forColumn(model, j);
                     // 数据项
-                    String value = model.getValueAt(rowIndex, colIndex).toString();
-                    cellData.add(value);
+                    Object obj = model.getValueAt(rowIndex, colIndex);
+                    cellData.add(obj);
                     // 根据第一行的列下标获取表头标题信息
                     if (i == 0) {
                         DasColumn column = adaptVersion(grid, cols.get(j), colIndex);
@@ -65,8 +65,8 @@ public class ExportAction extends AnAction {
                         header.add(colName);
                     }
                 }
-                // 填充数据
-                map.put(i, cellData);
+                // 填充数据，第二行开始填充数据
+                map.put(i + 1, cellData);
             }
             // 填充标题
             map.put(0, header);

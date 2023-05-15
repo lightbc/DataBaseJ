@@ -85,7 +85,12 @@ public class SqlUtil {
                 List<Object> data = map.get(key);
                 String values = "";
                 for (int j = 0; j < data.size(); j++) {
-                    values += "'" + data.get(j) + "',";
+                    Object value = data.get(j);
+                    if (value == null) {
+                        values += "" + data.get(j) + ",";
+                    } else {
+                        values += "'" + data.get(j) + "',";
+                    }
                 }
                 if (!"".equals(values.trim())) {
                     values = values.substring(0, values.length() - 1);

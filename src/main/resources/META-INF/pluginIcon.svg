@@ -1,0 +1,17 @@
+<svg width="580" height="400" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse ry="61.5" rx="22" id="svg_1" cy="122.609375" cx="265.5" stroke-width="1.5" stroke="#000" fill="#ff0000"/>
+  <ellipse ry="13.5" rx="13.5" id="svg_7" cy="198.609375" cx="266"  stroke-width="1.5" stroke="#000" fill="#fff"/>
+  <ellipse transform="rotate(90 341.50000000000006,196.60937500000003) " ry="61.5" rx="22" id="svg_8" cy="196.609375" cx="341.5" stroke-width="1.5" stroke="#000" fill="#ffff00"/>
+  <ellipse transform="rotate(180 266.5,273.609375) " ry="61.5" rx="22" id="svg_9" cy="273.609375" cx="266.5" stroke-width="1.5" stroke="#000" fill="#4c4c4c"/>
+  <ellipse transform="rotate(-90 191.50000000000003,196.609375) " ry="61.5" rx="22" id="svg_10" cy="196.609375" cx="191.5" stroke-width="1.5" stroke="#000" fill="#007f00"/>
+ </g>
+</svg>
