@@ -80,6 +80,9 @@ public class ExcelUtil {
                     value = String.valueOf(obj);
                 }
                 // 填充单元格数据
+                if (value.length() > 32767) {
+                    throw new Exception("单元格内容过长：【" + i + "行;" + (j + 1) + "列】");
+                }
                 cell.setCellValue(value);
                 cell.setCellStyle(style);
                 // 根据数据行最后一行，每列单元格中的数据长度设置单元格的长度值，前后留白

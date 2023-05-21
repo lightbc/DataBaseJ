@@ -1,6 +1,6 @@
 package com.lightbc.databasej.util;
 
-import com.lightbc.databasej.interfaces.DingTalkOperateInterface;
+import com.lightbc.databasej.interfaces.AppOperateInterface;
 
 import java.io.IOException;
 
@@ -10,35 +10,6 @@ import java.io.IOException;
 public class DingTalkUtil {
     // 进程名称
     private static final String PROGRAM_NAME = "DingTalk.exe";
-
-    /**
-     * 获取进程本地位置
-     *
-     * @return string 进程位置
-     */
-    public String getProcessLocation() {
-        String result = "";
-        try {
-            String cmd = "cmd /c wmic process get executablepath | findstr \"" + PROGRAM_NAME + "\"";
-            Process dingTalk = Runtime.getRuntime().exec(cmd);
-            FileUtil fileUtil = new FileUtil();
-            String read = fileUtil.read(dingTalk.getInputStream());
-            if (read != null && !"".equals(read.trim())) {
-                String[] contents = read.split("\n");
-                // 获取钉钉进程列表，获取列表中第一个进程的所在位置
-                for (String content : contents) {
-                    String c = content.trim();
-                    if (!"".equals(c)) {
-                        result = c;
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-        } finally {
-            return result;
-        }
-    }
 
     /**
      * 自动发送
@@ -91,7 +62,7 @@ public class DingTalkUtil {
      */
     public void send(String appName, Object object) {
         try {
-            String cmd = getProcessLocation();
+            String cmd = CmdUtil.getProcessLocation(PROGRAM_NAME);
             if ("".equals(cmd.trim())) {
                 DialogUtil.showTips(null, "请确认钉钉程序当前正在正常运行中！");
                 return;
@@ -99,6 +70,7 @@ public class DingTalkUtil {
             Runtime.getRuntime().exec(cmd);
             RobotUtil robotUtil = new RobotUtil();
             send(appName, object, robotUtil);
+            DialogUtil.showTips(null, "导出钉钉成功！");
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }
@@ -115,7 +87,7 @@ public class DingTalkUtil {
     private void send(String appName, Object object, RobotUtil robotUtil) throws InterruptedException {
         robotUtil.copy(object);
         Thread.sleep(500);
-        robotUtil.paste(KeyboardShortcutUtil.getKeyCodes(appName, DingTalkOperateInterface.PASTE));
+        robotUtil.paste(KeyboardShortcutUtil.getKeyCodes(appName, AppOperateInterface.DING_TALK_PASTE));
     }
 
 }

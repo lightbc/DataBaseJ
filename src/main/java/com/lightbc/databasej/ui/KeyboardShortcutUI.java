@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 快捷键配置UI界面
@@ -36,10 +37,6 @@ public class KeyboardShortcutUI {
     private String appName;
     // 配置的快捷键
     private Map<Integer, String> keys;
-
-    public KeyboardShortcutUI() {
-        init();
-    }
 
     public KeyboardShortcutUI(String appName, DialogUtil.CustomDialog customDialog) {
         this.appName = appName;
@@ -113,27 +110,27 @@ public class KeyboardShortcutUI {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                String sk = "";
-                String k = "";
+                StringBuilder sk = new StringBuilder();
+                StringBuilder k = new StringBuilder();
                 if (keys != null) {
                     for (Integer key : keys.keySet()) {
                         // 拼接显示，格式:x + x + x
-                        sk += keys.get(key) + " + ";
+                        sk.append(keys.get(key)).append(" + ");
                         // 拼接，格式：x,x,x
-                        k += key + ",";
+                        k.append(key).append(",");
                     }
                 }
-                if (!"".equals(sk.trim())) {
+                if (!"".equals(sk.toString().trim())) {
                     // 去除拼接后的多余后缀
-                    sk = sk.substring(0, sk.length() - 3);
+                    sk = new StringBuilder(sk.substring(0, sk.length() - 3));
                     ks.setText("");
-                    ks.setText(sk);
+                    ks.setText(sk.toString());
                 }
-                if (!"".equals(k.trim())) {
+                if (!"".equals(k.toString().trim())) {
                     // 去除拼接后的多余后缀
-                    k = k.substring(0, k.length() - 1);
+                    k = new StringBuilder(k.substring(0, k.length() - 1));
                     hidden.setText("");
-                    hidden.setText(k);
+                    hidden.setText(k.toString());
                 }
                 keys = new LinkedHashMap<>();
             }
@@ -144,7 +141,7 @@ public class KeyboardShortcutUI {
      * 初始化显示
      */
     private void initShow() {
-        String keyName = addKs.getSelectedItem().toString();
+        String keyName = Objects.requireNonNull(addKs.getSelectedItem()).toString();
         if (!"".equals(keyName.trim())) {
             // 初始显示快捷键名称
             ksName.setText(keyName);

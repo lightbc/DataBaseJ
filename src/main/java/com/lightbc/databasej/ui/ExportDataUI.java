@@ -25,6 +25,7 @@ import java.util.Objects;
 public class ExportDataUI {
     private static final String EXPORT_LOCAL = "local";
     private static final String EXPORT_DING_TALK = "dingTalk";
+    private static final String EXPORT_WE_CHAT = "weChat";
     // 导出文件名命名组件
     private JTextField exportFileName;
     // 主面板
@@ -33,6 +34,7 @@ public class ExportDataUI {
     private JComboBox exportType;
     private JLabel local;
     private JLabel dingTalk;
+    private JLabel weChat;
     private String exportPath;
     private String tableName;
     private Map<Integer, List<Object>> dataMap;
@@ -51,6 +53,7 @@ public class ExportDataUI {
     private void init() {
         exportLocal();
         exportDingTalk();
+        exportWeChat();
     }
 
 
@@ -69,9 +72,16 @@ public class ExportDataUI {
     }
 
     /**
+     * 导出到微信
+     */
+    private void exportWeChat() {
+        export(weChat, EXPORT_WE_CHAT);
+    }
+
+    /**
      * 确认导出数据
      */
-    public void ok() {
+    public void ok() throws Exception {
         if (exportPath == null || "".equals(exportPath.trim())) {
             return;
         }
@@ -115,14 +125,9 @@ public class ExportDataUI {
      * @param map      导出数据
      * @param type     Excel版本
      */
-    private void excel(String savePath, Map<Integer, List<Object>> map, String type) {
-        try {
-            ExcelUtil excelUtil = new ExcelUtil();
-            excelUtil.writeExcel(savePath, map, type);
-            DialogUtil.showTips(null, "Excel文件生成成功！");
-        } catch (Exception ex) {
-            DialogUtil.showTips(null, "Excel 写入错误原因:" + ex.getCause());
-        }
+    private void excel(String savePath, Map<Integer, List<Object>> map, String type) throws Exception {
+        ExcelUtil excelUtil = new ExcelUtil();
+        excelUtil.writeExcel(savePath, map, type);
     }
 
     /**
@@ -133,13 +138,8 @@ public class ExportDataUI {
      * @param name     数据表表名
      */
     private void sql(String savePath, Map<Integer, List<Object>> map, String name) {
-        try {
-            SqlUtil sqlUtil = new SqlUtil();
-            sqlUtil.writeSql(savePath, map, name);
-            DialogUtil.showTips(null, "SQL文件生成成功！");
-        } catch (Exception e) {
-            DialogUtil.showTips(null, "SQL写入错误原因：" + e.getCause());
-        }
+        SqlUtil sqlUtil = new SqlUtil();
+        sqlUtil.writeSql(savePath, map, name);
     }
 
     /**
@@ -160,6 +160,9 @@ public class ExportDataUI {
                         break;
                     case EXPORT_DING_TALK:
                         dingTalk();
+                        break;
+                    case EXPORT_WE_CHAT:
+                        weChat();
                         break;
                 }
             }
@@ -190,17 +193,24 @@ public class ExportDataUI {
      * 本地
      */
     private void local() {
-        // 获取当前操作的项目工程
-        Project project = ProjectUtil.getProject();
-        // 获取项目工程的虚拟文件对象
-        String basePath = project.getBasePath();
-        VirtualFile virtualFile = project.getProjectFile().findFileByRelativePath(basePath);
-        // 路径选择器
-        virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileDescriptor(), project, virtualFile);
-        if (virtualFile != null) {
-            exportPath = virtualFile.getPath();
+        try {
+            // 获取当前操作的项目工程
+            Project project = ProjectUtil.getProject();
+            // 获取项目工程的虚拟文件对象
+            String basePath = project.getBasePath();
+            VirtualFile virtualFile = project.getProjectFile().findFileByRelativePath(basePath);
+            // 路径选择器
+            virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileDescriptor(), project, virtualFile);
+            if (virtualFile != null) {
+                exportPath = virtualFile.getPath();
+                ok();
+                DialogUtil.showTips(null, "导出本地成功！");
+            } else {
+                DialogUtil.showTips(null, "未选择有效导出路径！");
+            }
+        } catch (Exception e) {
+            DialogUtil.showTips(null, "导出本地报错：" + e.getMessage());
         }
-        ok();
     }
 
     /**
@@ -209,33 +219,63 @@ public class ExportDataUI {
     private void dingTalk() {
         try {
             DingTalkUtil dingTalkUtil = new DingTalkUtil();
-            FileUtil fileUtil = new FileUtil();
-            // 选择的导出文件类型
-            String ext = Objects.requireNonNull(exportType.getSelectedItem()).toString();
-            String suffix = ".".concat(ext);
-            // 自定义文件名
-            String fileName = exportFileName.getText().trim();
-            if ("".equals(fileName)) {
-                // 文件名默认为数据表表名
-                fileName = tableName;
-            }
-            //  创建临时文件
-            File file = fileUtil.createTempFile(fileName, suffix, exportPath);
+            File file = getTempFile();
             if (file != null) {
                 // 获取文件父级文件夹目录路径
                 exportPath = file.getParent();
-                // 不显示提示信息
-                DialogUtil.SHOW_DIALOG = false;
                 ok();
-                // 显示提示信息
-                DialogUtil.SHOW_DIALOG = true;
 //                new Thread(() -> dingTalkUtil.send(SupportProgramInterface.DING_TALK, "我", file)).start();
                 new Thread(() -> dingTalkUtil.send(SupportProgramInterface.DING_TALK, file)).start();
             } else {
                 DialogUtil.showTips(null, "钉钉发送失败，临时文件未创建成功！");
             }
         } catch (IOException e) {
-            DialogUtil.showTips(null, "钉钉发送失败，失败原因，临时文件创建异常：【" + e.getCause() + "】");
+            DialogUtil.showTips(null, "钉钉发送失败，失败原因，临时文件创建异常：【" + e.getMessage() + "】");
+        } catch (Exception e) {
+            DialogUtil.showTips(null, "导出钉钉报错：" + e.getMessage());
         }
+    }
+
+    /**
+     * 微信
+     */
+    private void weChat() {
+        try {
+            WeChatUtil weChatUtil = new WeChatUtil();
+            File file = getTempFile();
+            if (file != null) {
+                // 获取文件父级文件夹目录路径
+                exportPath = file.getParent();
+                ok();
+                new Thread(() -> weChatUtil.send(SupportProgramInterface.WE_CHAT, file)).start();
+            } else {
+                DialogUtil.showTips(null, "微信发送失败，临时文件未创建成功！");
+            }
+        } catch (IOException e) {
+            DialogUtil.showTips(null, "微信发送失败，失败原因，临时文件创建异常：【" + e.getMessage() + "】");
+        } catch (Exception e) {
+            DialogUtil.showTips(null, "导出微信报错：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取导出缓存文件
+     *
+     * @return file
+     * @throws IOException
+     */
+    private File getTempFile() throws IOException {
+        FileUtil fileUtil = new FileUtil();
+        // 选择的导出文件类型
+        String ext = Objects.requireNonNull(exportType.getSelectedItem()).toString();
+        String suffix = ".".concat(ext);
+        // 自定义文件名
+        String fileName = exportFileName.getText().trim();
+        if ("".equals(fileName)) {
+            // 文件名默认为数据表表名
+            fileName = tableName;
+        }
+        //  创建临时文件
+        return fileUtil.createTempFile(fileName, suffix, exportPath);
     }
 }
