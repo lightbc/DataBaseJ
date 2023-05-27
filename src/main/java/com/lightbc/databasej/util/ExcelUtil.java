@@ -6,6 +6,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,9 +86,10 @@ public class ExcelUtil {
                 }
                 cell.setCellValue(value);
                 cell.setCellStyle(style);
-                // 根据数据行最后一行，每列单元格中的数据长度设置单元格的长度值，前后留白
+                // 内容美化显示，前后留白
                 if (i == (rows - 1)) {
-                    sheet.setColumnWidth(j, (value.length() + 4) * 256);
+                    Map<Integer, Integer> maxColMap = getMaxLenLine(map);
+                    sheet.setColumnWidth(j, (maxColMap.get(j) + 4) * 256);
                 }
             }
             // 设置行高
@@ -102,6 +104,34 @@ public class ExcelUtil {
         workbook.write(fos);
         workbook.close();
         fos.close();
+    }
+
+    /**
+     * 获取处理数据中最大长度的列的长度
+     *
+     * @param map 处理数据
+     * @return lMap<Integer, Integer>
+     */
+    private Map<Integer, Integer> getMaxLenLine(Map<Integer, List<Object>> map) {
+        Map<Integer, Integer> recordMap = new LinkedHashMap<>();
+        if (map != null) {
+            for (Integer key : map.keySet()) {
+                List<Object> objectList = map.get(key);
+                for (int i = 0; i < objectList.size(); i++) {
+                    if (objectList.get(i) != null) {
+                        String obj = objectList.get(i).toString();
+                        if (recordMap.size() < objectList.size()) {
+                            recordMap.put(i, obj.length());
+                        } else if (recordMap.containsKey(i) && obj.length() > recordMap.get(i)) {
+                            recordMap.put(i, obj.length());
+                        }
+                    } else {
+                        recordMap.put(i, 0);
+                    }
+                }
+            }
+        }
+        return recordMap;
     }
 
     /**

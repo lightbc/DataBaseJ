@@ -70,7 +70,6 @@ public class DingTalkUtil {
             Runtime.getRuntime().exec(cmd);
             RobotUtil robotUtil = new RobotUtil();
             send(appName, object, robotUtil);
-            DialogUtil.showTips(null, "导出钉钉成功！");
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }

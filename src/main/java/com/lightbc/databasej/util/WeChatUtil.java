@@ -25,7 +25,6 @@ public class WeChatUtil {
             Runtime.getRuntime().exec(cmd);
             RobotUtil robotUtil = new RobotUtil();
             send(appName, object, robotUtil);
-            DialogUtil.showTips(null, "导出微信成功！");
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }

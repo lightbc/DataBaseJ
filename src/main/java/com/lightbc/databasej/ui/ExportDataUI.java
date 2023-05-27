@@ -51,9 +51,17 @@ public class ExportDataUI {
     }
 
     private void init() {
+        showDefaultName();
         exportLocal();
         exportDingTalk();
         exportWeChat();
+    }
+
+    /**
+     * 显示默认导出文件名称
+     */
+    private void showDefaultName() {
+        exportFileName.setText(tableName);
     }
 
 
@@ -80,42 +88,56 @@ public class ExportDataUI {
 
     /**
      * 确认导出数据
+     *
+     * @return boolean
      */
-    public void ok() throws Exception {
+    public boolean ok() {
+        if (dataMap == null || dataMap.size() == 0) {
+            DialogUtil.showTips(mainPanel, "没有可供导出的数据结果！");
+            return false;
+        }
         if (exportPath == null || "".equals(exportPath.trim())) {
-            return;
+            return false;
         }
         // 判断导出位置是否为空
         String savePath = exportPath.trim();
         if ("".equals(savePath)) {
             DialogUtil.showTips(mainPanel, "请选择导出路径！");
-            return;
+            return false;
         }
-        // 获取导出文件自定义命名名称
-        String fileName = exportFileName.getText().trim();
-        if ("".equals(fileName)) {
-            fileName = tableName;
+        boolean flag = false;
+        try {
+            // 获取导出文件自定义命名名称
+            String fileName = exportFileName.getText().trim();
+            if ("".equals(fileName)) {
+                fileName = tableName;
+            }
+            // 获取导出文件的文件类型
+            String ext = Objects.requireNonNull(exportType.getSelectedItem()).toString();
+            // 判断选择的路径是否是当前盘的根目录
+            File file = new File(savePath);
+            if (file.exists() && file.isDirectory()) {
+                savePath = file.getAbsolutePath().concat(File.separator).concat(fileName).concat(".").concat(ext);
+            }
+            // 处理Excel文件（2003）
+            if ("xls".equals(ext)) {
+                excel(savePath, dataMap, ExcelUtil.EXCEL03);
+            }
+            // 处理Excel文件（2007）
+            if ("xlsx".equals(ext)) {
+                excel(savePath, dataMap, ExcelUtil.EXCEL07);
+            }
+            // 处理SQL文件
+            if ("sql".equals(ext)) {
+                sql(savePath, dataMap, tableName);
+            }
+            customDialog.dispose();
+            flag = true;
+        } catch (Exception e) {
+            DialogUtil.showTips(mainPanel, "导出错误：" + e.getMessage());
+        } finally {
+            return flag;
         }
-        // 获取导出文件的文件类型
-        String ext = Objects.requireNonNull(exportType.getSelectedItem()).toString();
-        // 判断选择的路径是否是当前盘的根目录
-        File file = new File(savePath);
-        if (file.exists() && file.isDirectory()) {
-            savePath = file.getAbsolutePath().concat(File.separator).concat(fileName).concat(".").concat(ext);
-        }
-        // 处理Excel文件（2003）
-        if ("xls".equals(ext)) {
-            excel(savePath, dataMap, ExcelUtil.EXCEL03);
-        }
-        // 处理Excel文件（2007）
-        if ("xlsx".equals(ext)) {
-            excel(savePath, dataMap, ExcelUtil.EXCEL07);
-        }
-        // 处理SQL文件
-        if ("sql".equals(ext)) {
-            sql(savePath, dataMap, tableName);
-        }
-        customDialog.dispose();
     }
 
     /**
@@ -203,8 +225,10 @@ public class ExportDataUI {
             virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileDescriptor(), project, virtualFile);
             if (virtualFile != null) {
                 exportPath = virtualFile.getPath();
-                ok();
-                DialogUtil.showTips(null, "导出本地成功！");
+                boolean b = ok();
+                if (b) {
+                    DialogUtil.showTips(null, "导出本地成功！");
+                }
             } else {
                 DialogUtil.showTips(null, "未选择有效导出路径！");
             }
@@ -223,9 +247,10 @@ public class ExportDataUI {
             if (file != null) {
                 // 获取文件父级文件夹目录路径
                 exportPath = file.getParent();
-                ok();
-//                new Thread(() -> dingTalkUtil.send(SupportProgramInterface.DING_TALK, "我", file)).start();
-                new Thread(() -> dingTalkUtil.send(SupportProgramInterface.DING_TALK, file)).start();
+                boolean b = ok();
+                if (b) {
+                    new Thread(() -> dingTalkUtil.send(SupportProgramInterface.DING_TALK, file)).start();
+                }
             } else {
                 DialogUtil.showTips(null, "钉钉发送失败，临时文件未创建成功！");
             }
@@ -246,8 +271,10 @@ public class ExportDataUI {
             if (file != null) {
                 // 获取文件父级文件夹目录路径
                 exportPath = file.getParent();
-                ok();
-                new Thread(() -> weChatUtil.send(SupportProgramInterface.WE_CHAT, file)).start();
+                boolean b = ok();
+                if (b) {
+                    new Thread(() -> weChatUtil.send(SupportProgramInterface.WE_CHAT, file)).start();
+                }
             } else {
                 DialogUtil.showTips(null, "微信发送失败，临时文件未创建成功！");
             }

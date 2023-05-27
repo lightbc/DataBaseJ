@@ -1,14 +1,12 @@
 package com.lightbc.databasej.actions;
 
 import com.intellij.database.datagrid.*;
-import com.intellij.database.model.DasColumn;
 import com.intellij.database.run.ui.DataAccessType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.lightbc.databasej.ui.ExportDataUI;
 import com.lightbc.databasej.util.DialogUtil;
 import com.lightbc.databasej.util.ProjectUtil;
-import com.lightbc.databasej.util.ReflectUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -60,18 +58,24 @@ public class ExportAction extends AnAction {
                     cellData.add(obj);
                     // 根据第一行的列下标获取表头标题信息
                     if (i == 0) {
-                        DasColumn column = adaptVersion(grid, cols.get(j), colIndex);
-                        String colName = column.getName();
+                        String colName = cols.get(j).getName();
                         header.add(colName);
                     }
                 }
                 // 填充数据，第二行开始填充数据
                 map.put(i + 1, cellData);
             }
-            // 填充标题
-            map.put(0, header);
+            if (rows.size() > 0) {
+                // 填充标题
+                map.put(0, header);
+            }
             // 获取操作的数据表表名
-            String tableName = DataGridUtil.getDatabaseTable(grid).getName();
+            String tableName;
+            try {
+                tableName = DataGridUtil.getDatabaseTable(grid).getName();
+            } catch (Exception ex) {
+                tableName = UUID.randomUUID().toString().replaceAll("-", "");
+            }
             DialogUtil dialogUtil = new DialogUtil();
             DialogUtil.CustomDialog customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
             ExportDataUI exportDataUI = new ExportDataUI(tableName, map, customDialog);
@@ -79,26 +83,4 @@ public class ExportAction extends AnAction {
         }
     }
 
-    /**
-     * 版本适应
-     *
-     * @param grid  数据网格
-     * @param col   列
-     * @param index 数据模型下标
-     * @return DasColumn
-     */
-    private static DasColumn adaptVersion(DataGrid grid, DataConsumer.Column col, ModelIndex index) {
-        DasColumn column = null;
-        ReflectUtil util = new ReflectUtil();
-        try {
-            column = (DasColumn) util.getMethod(DataGridUtil.class, "getDatabaseColumn", DataGrid.class, DataConsumer.Column.class).invoke(DataGridUtil.class, grid, col);
-        } catch (Exception e) {
-            try {
-                column = (DasColumn) util.getMethod(DataGridUtil.class, "getDatabaseColumn", DataGrid.class, ModelIndex.class).invoke(DataGridUtil.class, grid, index);
-            } catch (Exception e1) {
-            }
-        } finally {
-            return column;
-        }
-    }
 }
