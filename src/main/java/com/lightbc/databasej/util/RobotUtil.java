@@ -3,7 +3,6 @@ package com.lightbc.databasej.util;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,42 +24,6 @@ public class RobotUtil {
             e.printStackTrace();
         }
     }
-
-    public void esc(List<Integer> list) {
-        robot.keyPress(list.get(0));
-        robot.delay(commonDelay);
-        robot.keyRelease(list.get(0));
-    }
-
-    /**
-     * 快捷键打开钉钉搜索框
-     */
-    public void search(List<Integer> list) {
-        robot.keyPress(list.get(0));
-        robot.keyPress(list.get(1));
-        robot.keyPress(list.get(2));
-        robot.delay(commonDelay);
-        robot.keyRelease(list.get(2));
-        robot.keyRelease(list.get(1));
-        robot.keyRelease(list.get(0));
-        robot.delay(commonDelay);
-    }
-
-    /**
-     * 搜索指定联系人
-     */
-    public void searchContact() {
-        robot.keyPress(KeyEvent.VK_TAB);
-        robot.delay(commonDelay);
-        robot.keyRelease(KeyEvent.VK_TAB);
-        robot.delay(commonDelay);
-    }
-
-    /*public void copy(String text) {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Transferable transferable = new StringSelection(text);
-        clipboard.setContents(transferable, null);
-    }*/
 
     /**
      * 复制内容到剪贴板
@@ -106,30 +69,4 @@ public class RobotUtil {
         robot.delay(longDelay);
     }
 
-    /*public void common(String appName){
-        Map<Integer,List<Integer>> map=KeyboardShortcutUtil.getKeyCodes(appName);
-        if(map!=null && map.size()>0){
-            for(Integer key:map.keySet()){
-                List<Integer> list=map.get(key);
-                if(list!=null && list.size()>0){
-                    keyPress(list);
-                    robot.delay(commonDelay);
-                    keyRelease(list);
-                }
-            }
-        }
-    }
-
-    private void keyPress(List<Integer> list){
-        Collections.reverse(list);
-        for(Integer o:list){
-            robot.keyPress(o);
-        }
-    }
-
-    private void keyRelease(List<Integer> list){
-        for(Integer o:list){
-            robot.keyRelease(o);
-        }
-    }*/
 }

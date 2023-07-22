@@ -13,12 +13,9 @@ public class DataBaseJGroup extends ActionGroup {
     @NotNull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
-        /*ExportAction export = new ExportAction("Export Data");
-        KeyboardShortcutGroup ksGroup = new KeyboardShortcutGroup("Keyboard Shortcut");
-        HelpAction help = new HelpAction("Help");
-        return new AnAction[]{export, ksGroup, help};*/
         ExportAction export = new ExportAction("Export Data");
+        CleanCacheAction cleanCache = new CleanCacheAction("Clean Cache");
         HelpAction help = new HelpAction("Help");
-        return new AnAction[]{export, help};
+        return new AnAction[]{export, cleanCache, help};
     }
 }

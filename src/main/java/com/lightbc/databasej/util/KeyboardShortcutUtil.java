@@ -3,12 +3,10 @@ package com.lightbc.databasej.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 快捷键处理工具类
@@ -93,68 +91,6 @@ public class KeyboardShortcutUtil {
     }
 
     /**
-     * 获取快捷键名称
-     *
-     * @param appName 三方应用名称
-     * @return list
-     */
-    public static List<String> getKeyNames(String appName) {
-        Map<String, Object> map = getKeyboardShortcut(appName);
-        if (map != null && map.size() > 0) {
-            return map.keySet().stream().collect(Collectors.toList());
-        }
-        return null;
-    }
-
-    /**
-     * 获取UI显示的快捷键样式，样例：ctrl + v
-     *
-     * @param appName 三方应用名称
-     * @param keyName 快捷键名称
-     * @return string
-     */
-    public static String getKey(String appName, String keyName) {
-        String result = "";
-        Map<String, Object> map = getKeyboardShortcut(appName);
-        if (map != null && map.size() > 0 && map.containsKey(keyName)) {
-            String key = map.get(keyName).toString();
-            if (!"".equals(key.trim()) && key.indexOf(",") != -1) {
-                String[] keys = key.split(",");
-                for (String k : keys) {
-                    k = k.trim();
-                    if (!"".equals(k)) {
-                        int code = getKeyCode(k);
-                        String kt = KeyEvent.getKeyText(code);
-                        result += kt + " + ";
-                    }
-                }
-                result = result.substring(0, result.length() - 3);
-            } else {
-                int code = getKeyCode(key);
-                String kt = KeyEvent.getKeyText(code);
-                result = kt;
-            }
-            return result;
-        }
-        return null;
-    }
-
-    /**
-     * 获取原始的配置文件中的快捷键表示形式
-     *
-     * @param appName 三方应用名称
-     * @param keyName 快捷键名称
-     * @return string
-     */
-    public static String getDefaultKey(String appName, String keyName) {
-        Map<String, Object> map = getKeyboardShortcut(appName);
-        if (map != null && map.size() > 0 && map.containsKey(keyName)) {
-            return map.get(keyName).toString();
-        }
-        return null;
-    }
-
-    /**
      * 获取全部的配置快捷键，按配置顺序有序读取
      *
      * @param appName 三方应用名称
@@ -220,36 +156,4 @@ public class KeyboardShortcutUtil {
         }
     }
 
-    /**
-     * 保存最新配置
-     *
-     * @param appName 三方应用名称
-     * @param keyName 快捷键名称
-     * @param value   快捷键
-     */
-    public static void save(String appName, String keyName, String value) {
-        JSONArray contents = loadContent();
-        if (contents != null && contents.size() > 0) {
-            for (Object content : contents) {
-                JSONObject json = (JSONObject) content;
-                if (json.containsKey(appName)) {
-                    JSONArray array = json.getJSONArray(appName);
-                    if (array != null && array.size() > 0) {
-                        for (Object obj : array) {
-                            JSONObject jsonObject = (JSONObject) obj;
-                            if (jsonObject != null && jsonObject.containsKey(keyName)) {
-                                jsonObject.put(keyName, value);
-                            } else {
-                                JSONObject nObj = new JSONObject();
-                                nObj.put(keyName, value);
-                                array.add(nObj);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        FileUtil fileUtil = new FileUtil();
-        fileUtil.write(getCacheFilePath(), contents.toJSONString());
-    }
 }

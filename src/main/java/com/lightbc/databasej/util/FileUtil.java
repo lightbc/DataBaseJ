@@ -307,28 +307,4 @@ public class FileUtil {
         return ImageIO.read(FileUtil.class.getResourceAsStream(relativePath));
     }
 
-    /**
-     * 创建临时文件
-     *
-     * @param name       文件名称
-     * @param ext        文件后缀
-     * @param exportPath 导出路径
-     * @return file
-     * @throws IOException
-     */
-    public File createTempFile(String name, String ext, String exportPath) throws IOException {
-        exportPath = "C:/databasej_temp/";
-        String path = exportPath.concat(name).concat(ext);
-        return create(path) ? new File(path) : null;
-    }
-
-    /**
-     * 删除临时文件
-     *
-     * @param file 临时文件
-     * @return Boolean true-删除成功，false-删除失败
-     */
-    public boolean deleteTempFile(File file) {
-        return file.delete();
-    }
 }

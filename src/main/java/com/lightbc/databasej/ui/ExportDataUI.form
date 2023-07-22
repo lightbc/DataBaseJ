@@ -103,6 +103,7 @@
                     <item value="xls"/>
                     <item value="xlsx"/>
                     <item value="sql"/>
+                    <item value="json"/>
                   </model>
                 </properties>
               </component>

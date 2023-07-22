@@ -1,12 +1,12 @@
 <idea-plugin>
     <id>com.lightbc.databasej</id>
     <name>DataBaseJ</name>
-    <version>1.2.1-RELEASE</version>
+    <version>1.2.2-RELEASE</version>
     <vendor email="lightbc@163.com" url="https://www.cnblogs.com/lightbc">lightbc</vendor>
 
     <description>
         <![CDATA[
-          <h3>English description:</h3>
+          <h3>English Description:</h3>
           <p>DataBaseJ is a database data processing plugin. Based on DataBase Tools plugin development.</p>
           <p>Solutions to related issues encountered in database data processing during daily development.</p>
 
@@ -18,13 +18,20 @@
 
     <change-notes>
         <![CDATA[
-        <h3>v1.2.1-RELEASE</h3>
+        <h4>v1.2.2-RELEASE</h4>
         <ol>
-            <li>获取数据网格的查询结果导出数据，不再通过DasColumn方式处理。</li>
-            <li>支持默认的文件名创建，反显默认文件名称。</li>
-            <li>代码逻辑优化，提示信息细化及优化。</li>
-            <li>excel方式导出时，单元格显示优化。</li>
-            <li>其它已知问题修复。</li>
+            <li>Remove excess files and comment code, and remove unused code.</li>
+            <li>Add export JSON type.</li>
+            <li>Added cache function for clearing third-party exports.</li>
+            <li>Repair and optimization of known issues.</li>
+        </ol>
+
+        <h4>v1.2.2-RELEASE</h4>
+        <ol>
+            <li>移除多余文件及注释代码、无使用代码。</li>
+            <li>新增导出json类型。</li>
+            <li>新增清除三方导出时产生的缓存功能。</li>
+            <li>已知问题的修复和优化。</li>
         </ol>
         ]]>
     </change-notes>

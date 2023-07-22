@@ -23,8 +23,11 @@ import java.util.Objects;
  */
 @Data
 public class ExportDataUI {
+    // 导出本地
     private static final String EXPORT_LOCAL = "local";
+    // 导出钉钉
     private static final String EXPORT_DING_TALK = "dingTalk";
+    // 导出微信
     private static final String EXPORT_WE_CHAT = "weChat";
     // 导出文件名命名组件
     private JTextField exportFileName;
@@ -39,9 +42,6 @@ public class ExportDataUI {
     private String tableName;
     private Map<Integer, List<Object>> dataMap;
     private DialogUtil.CustomDialog customDialog;
-
-    public ExportDataUI() {
-    }
 
     public ExportDataUI(String tableName, Map<Integer, List<Object>> dataMap, DialogUtil.CustomDialog customDialog) {
         this.tableName = tableName;
@@ -121,15 +121,19 @@ public class ExportDataUI {
             }
             // 处理Excel文件（2003）
             if ("xls".equals(ext)) {
-                excel(savePath, dataMap, ExcelUtil.EXCEL03);
+                exportExcel(savePath, dataMap, ExcelUtil.EXCEL03);
             }
             // 处理Excel文件（2007）
             if ("xlsx".equals(ext)) {
-                excel(savePath, dataMap, ExcelUtil.EXCEL07);
+                exportExcel(savePath, dataMap, ExcelUtil.EXCEL07);
             }
             // 处理SQL文件
             if ("sql".equals(ext)) {
-                sql(savePath, dataMap, tableName);
+                exportSql(savePath, dataMap, tableName);
+            }
+            // 处理json文件
+            if ("json".equals(ext)) {
+                exportJson(savePath, dataMap);
             }
             customDialog.dispose();
             flag = true;
@@ -147,7 +151,7 @@ public class ExportDataUI {
      * @param map      导出数据
      * @param type     Excel版本
      */
-    private void excel(String savePath, Map<Integer, List<Object>> map, String type) throws Exception {
+    private void exportExcel(String savePath, Map<Integer, List<Object>> map, String type) throws Exception {
         ExcelUtil excelUtil = new ExcelUtil();
         excelUtil.writeExcel(savePath, map, type);
     }
@@ -159,9 +163,21 @@ public class ExportDataUI {
      * @param map      导出数据
      * @param name     数据表表名
      */
-    private void sql(String savePath, Map<Integer, List<Object>> map, String name) {
+    private void exportSql(String savePath, Map<Integer, List<Object>> map, String name) {
         SqlUtil sqlUtil = new SqlUtil();
         sqlUtil.writeSql(savePath, map, name);
+    }
+
+    /**
+     * 导出json文件
+     *
+     * @param savePath 保存位置
+     * @param map      导出数据
+     * @throws Exception
+     */
+    private void exportJson(String savePath, Map<Integer, List<Object>> map) throws Exception {
+        JsonUtil jsonUtil = new JsonUtil();
+        jsonUtil.writeJson(savePath, dataMap);
     }
 
     /**
@@ -292,7 +308,6 @@ public class ExportDataUI {
      * @throws IOException
      */
     private File getTempFile() throws IOException {
-        FileUtil fileUtil = new FileUtil();
         // 选择的导出文件类型
         String ext = Objects.requireNonNull(exportType.getSelectedItem()).toString();
         String suffix = ".".concat(ext);
@@ -303,6 +318,6 @@ public class ExportDataUI {
             fileName = tableName;
         }
         //  创建临时文件
-        return fileUtil.createTempFile(fileName, suffix, exportPath);
+        return PluginUtil.temp(fileName, suffix);
     }
 }

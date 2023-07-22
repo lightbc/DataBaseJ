@@ -17,6 +17,7 @@
 <ol>
 <li>基于DataBase Tools插件。</li>
 <li>根据console查询SQL执行结果导出查询结果集。</li>
+<li>支持xls、xlsx、sql、json等类型格式导出。</li>
 </ol>
 
 ## 三、功能展示

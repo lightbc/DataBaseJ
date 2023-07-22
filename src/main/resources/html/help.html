@@ -14,17 +14,31 @@
             display: block;
             text-align: right;
         }
+
+        .author {
+            margin-right: 7px;
+        }
+
+        img {
+            width: 850px;
+            height: 550px;
+            border: 2px solid lightblue;
+        }
+
+        ol li{
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
 <div>
-    <i class="version">V1.2.1-RELEASE</i>
+    <i class="version">V1.2.2-RELEASE</i>
 </div>
 <div>
     <h3>
         一、插件描述
     </h3>
-    <h4>English description:</h4>
+    <h4>English Description:</h4>
     <p>DataBaseJ is a database data processing plugin. Based on DataBase Tools plugin development.</p>
     <p>Solutions to related issues encountered in database data processing during daily development.</p>
 
@@ -34,15 +48,22 @@
 </div>
 <div>
     <h3>
-        二、功能描述
+        二、版本描述
     </h3>
-    <h4>v1.2.1-RELEASE</h4>
+    <h4>v1.2.2-RELEASE</h4>
     <ol>
-        <li>获取数据网格的查询结果导出数据，不再通过DasColumn方式处理。</li>
-        <li>支持默认的文件名创建，反显默认文件名称。</li>
-        <li>代码逻辑优化，提示信息细化及优化。</li>
-        <li>excel方式导出时，单元格显示优化。</li>
-        <li>其它已知问题修复。</li>
+        <li>Remove excess files and comment code, and remove unused code.</li>
+        <li>Add export JSON type.</li>
+        <li>Added cache function for clearing third-party exports.</li>
+        <li>Repair and optimization of known issues.</li>
+    </ol>
+
+    <h4>v1.2.2-RELEASE</h4>
+    <ol>
+        <li>移除多余文件及注释代码、无使用代码。</li>
+        <li>新增导出json类型。</li>
+        <li>新增清除三方导出时产生的缓存功能。</li>
+        <li>已知问题的修复和优化。</li>
     </ol>
 </div>
 <div>
@@ -53,7 +74,9 @@
         <p>提供Excel（2003&2007）文件和SQL文件数据导出。</p>
         <P>可选择文件导出的位置。</P>
         <p>可重命名导出文件的名称（默认为查询到的数据表名称）。</p>
+        <p>支持xls、xlsx、sql、json等类型格式导出。</p>
         <p>导出到三方应用，会发送到当前打开的消息对话框。</p>
+        <p>三方应用导出产生缓存清除。</p>
         <p>如想发送给指定的人，请确保你和他正处于会话当中。</p>
         <img src="../image/databasej.gif"/>
         <img src="../image/xls.png"/>
@@ -64,8 +87,11 @@
     <h3>
         四、作者
     </h3>
-    <p>Author:<a href="https://www.cnblogs.com/lightbc/">lightbc</a></p>
-    <p>GitHub:<a href="https://github.com/lightbc/DataBaseJ">https://github.com/lightbc/DataBaseJ</a></p>
+    <p>Author:lightbc</p>
+    <p>
+        <a class="author" href="https://www.cnblogs.com/lightbc/" target="_blank">Blog</a>
+        <a class="author" href="https://github.com/lightbc/DataBaseJ" target="_blank">GitHub</a>
+    </p>
 </div>
 </body>
 </html>

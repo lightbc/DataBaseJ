@@ -58,6 +58,9 @@ public class HelpAction extends AnAction {
         }
     }
 
+    /**
+     * 将打包的图片缓存到用户本地目录下
+     */
     private void cache() {
         FileUtil fileUtil = new FileUtil();
         // 获取插件保存路径

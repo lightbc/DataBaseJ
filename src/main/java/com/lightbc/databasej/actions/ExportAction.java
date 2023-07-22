@@ -79,7 +79,7 @@ public class ExportAction extends AnAction {
             DialogUtil dialogUtil = new DialogUtil();
             DialogUtil.CustomDialog customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
             ExportDataUI exportDataUI = new ExportDataUI(tableName, map, customDialog);
-            customDialog.showDialog(null, exportDataUI.getMainPanel(), "Export Data", 500, 300);
+            customDialog.showDialog(null, exportDataUI.getMainPanel(), "Export Data", 500, 240);
         }
     }
 
