@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.lightbc.databasej</id>
     <name>DataBaseJ</name>
-    <version>1.3.0-RELEASE</version>
+    <version>1.3.1-RELEASE</version>
     <vendor email="lightbc@163.com" url="https://www.cnblogs.com/lightbc">lightbc</vendor>
 
     <description>
@@ -18,20 +18,16 @@
 
     <change-notes>
         <![CDATA[
-        <h4>v1.3.0-RELEASE</h4>
+        <h4>v1.3.1-RELEASE</h4>
         <ol>
-            <li>Add the function of saving the current edited SQL.</li>
-            <li>Added the use of saved SQL functionality.</li>
-            <li>Add and delete saved SQL functions.</li>
-            <li>Repair and optimization of known issues.</li>
+            <li>Optimize the display logic of the SQL function operation group, and set the function to an invalid state when not in the JdbcConsole editor.</li>
+            <li>Optimize the logic of other parts.</li>
         </ol>
 
-        <h4>v1.3.0-RELEASE</h4>
+        <h4>v1.3.1-RELEASE</h4>
         <ol>
-            <li>新增保存当前编辑SQL功能。</li>
-            <li>新增使用已保存SQL功能。</li>
-            <li>新增删除已保存SQL功能。</li>
-            <li>已知问题的修复和优化。</li>
+            <li>优化SQL功能操作组的显示逻辑，非JdbcConsole编辑器时功能置为无效状态。</li>
+            <li>其它部分逻辑优化。</li>
         </ol>
         ]]>
     </change-notes>
@@ -61,7 +57,7 @@
         </group>
         <group id="Com.Lightbc.DataBaseJ.ContextGroup" class="com.lightbc.databasej.actions.ContextGroup" popup="true"
                text="DataBaseJ">
-            <add-to-group group-id="Console.Jdbc.RunContextGroup" anchor="first"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
     </actions>
 
