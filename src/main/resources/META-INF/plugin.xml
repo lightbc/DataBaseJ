@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.lightbc.databasej</id>
     <name>DataBaseJ</name>
-    <version>1.3.1-RELEASE</version>
+    <version>1.3.2-RELEASE</version>
     <vendor email="lightbc@163.com" url="https://www.cnblogs.com/lightbc">lightbc</vendor>
 
     <description>
@@ -18,16 +18,18 @@
 
     <change-notes>
         <![CDATA[
-        <h4>v1.3.1-RELEASE</h4>
+        <h4>v1.3.2-RELEASE</h4>
         <ol>
-            <li>Optimize the display logic of the SQL function operation group, and set the function to an invalid state when not in the JdbcConsole editor.</li>
-            <li>Optimize the logic of other parts.</li>
+            <li>New DataBase query result set right-click shortcut export option.</li>
+            <li>Help adjust page content.</li>
+            <li>Partial UI interface optimization.</li>
         </ol>
 
-        <h4>v1.3.1-RELEASE</h4>
+        <h4>v1.3.2-RELEASE</h4>
         <ol>
-            <li>优化SQL功能操作组的显示逻辑，非JdbcConsole编辑器时功能置为无效状态。</li>
-            <li>其它部分逻辑优化。</li>
+            <li>新增DataBase查询结果集右键快捷导出选项。</li>
+            <li>帮助页面内容调整。</li>
+            <li>部分UI界面优化。</li>
         </ol>
         ]]>
     </change-notes>
@@ -51,14 +53,22 @@
 
     <actions>
         <!-- Add your actions here -->
+        <!-- DataBaseJ主要功能项，根据查询SQL查询结果集，进行相关操作 -->
         <group id="Com.Lightbc.DataBaseJ" class="com.lightbc.databasej.actions.DataBaseJGroup" popup="true"
                text="DataBaseJ">
             <add-to-group group-id="Console.TableResult.Options" anchor="first"/>
         </group>
+        <!-- JdbcConsole编辑器，右键菜单属性项，SQL的增/删/使用-->
         <group id="Com.Lightbc.DataBaseJ.ContextGroup" class="com.lightbc.databasej.actions.ContextGroup" popup="true"
                text="DataBaseJ">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
+        <!-- 查询结果集右键提供导出功能 -->
+        <action id="Com.Lightbc.DataBaseJ.ExportAction" class="com.lightbc.databasej.actions.ExportAction"
+                text="Export Data(DataBaseJ)">
+            <keyboard-shortcut first-keystroke="alt Q" keymap="$default"/>
+            <add-to-group group-id="Console.TableResult.PopupGroup" anchor="first"/>
+        </action>
     </actions>
 
 </idea-plugin>

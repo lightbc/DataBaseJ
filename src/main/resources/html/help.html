@@ -32,7 +32,7 @@
 </head>
 <body>
 <div>
-    <i class="version">V1.3.1-RELEASE</i>
+    <i class="version">v1.3.2-RELEASE</i>
 </div>
 <div>
     <h3>
@@ -50,18 +50,18 @@
     <h3>
         二、版本描述
     </h3>
-    <h4>v1.3.1-RELEASE</h4>
+    <h4>v1.3.2-RELEASE</h4>
     <ol>
-        <li>Optimize the display logic of the SQL function operation group, and set the function to an invalid state
-            when not in the JdbcConsole editor.
-        </li>
-        <li>Optimize the logic of other parts.</li>
+        <li>New DataBase query result set right-click shortcut export option.</li>
+        <li>Help adjust page content.</li>
+        <li>Partial UI interface optimization.</li>
     </ol>
 
-    <h4>v1.3.1-RELEASE</h4>
+    <h4>v1.3.2-RELEASE</h4>
     <ol>
-        <li>优化SQL功能操作组的显示逻辑，非JdbcConsole编辑器时功能置为无效状态。</li>
-        <li>其它部分逻辑优化。</li>
+        <li>新增DataBase查询结果集右键快捷导出选项。</li>
+        <li>帮助页面内容调整。</li>
+        <li>部分UI界面优化。</li>
     </ol>
 </div>
 <div>
@@ -69,18 +69,20 @@
         三、功能介绍
     </h3>
     <div>
-        <p>提供Excel（2003&2007）文件和SQL文件数据导出。</p>
-        <P>可选择文件导出的位置。</P>
-        <p>可重命名导出文件的名称（默认为查询到的数据表名称）。</p>
-        <p>支持xls、xlsx、sql、json等类型格式导出。</p>
-        <p>导出到三方应用，会发送到当前打开的消息对话框。</p>
-        <p>三方应用导出产生缓存清除。</p>
-        <p>如想发送给指定的人，请确保你和他正处于会话当中。</p>
-        <p>可保存当前执行SQL由于下次使用、删除已保存的SQL。</p>
-        <img src="../image/databasej.gif"/>
-        <img src="../image/xls.png"/>
-        <img src="../image/sql.png"/>
-        <img src="../image/databasej_save.gif">
+        <ul>
+            <li>提供常用SQL保存/删除/重复使用功能，避免再次使用时重新编辑。</li>
+            <li>
+                <img src="../image/persist.gif">
+            </li>
+            <li>提供Excel(2003|2007)、SQL、JSON等多种文件格式导出功能。</li>
+            <li>支持导出文件重命名。</li>
+            <li>支持导出本地、钉钉、微信。</li>
+            <li>导出到三方应用时，请确保三方应用已登录，并且你和导出的接收人处于会话当中。</li>
+            <li>导出三方应用时，会产生缓存文件，插件提供手动清除缓存文件的功能。</li>
+            <li>
+                <img src="../image/func.gif">
+            </li>
+        </ul>
     </div>
 </div>
 <div>

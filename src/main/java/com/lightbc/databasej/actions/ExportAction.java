@@ -17,6 +17,8 @@ import java.util.List;
  * 查询结果导出
  */
 public class ExportAction extends AnAction {
+    public ExportAction() {
+    }
 
     ExportAction(String text) {
         super(text);
