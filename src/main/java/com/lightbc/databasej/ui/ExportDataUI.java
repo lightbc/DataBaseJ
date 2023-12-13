@@ -1,5 +1,6 @@
 package com.lightbc.databasej.ui;
 
+import com.intellij.database.datagrid.*;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
@@ -14,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,23 +40,38 @@ public class ExportDataUI {
     private JLabel local;
     private JLabel dingTalk;
     private JLabel weChat;
+    private JCheckBox allData;
     private String exportPath;
     private String tableName;
     private Map<Integer, List<Object>> dataMap;
     private DialogUtil.CustomDialog customDialog;
+    private DataGrid dataGrid;
 
-    public ExportDataUI(String tableName, Map<Integer, List<Object>> dataMap, DialogUtil.CustomDialog customDialog) {
-        this.tableName = tableName;
-        this.dataMap = dataMap;
-        this.customDialog = customDialog;
+    public ExportDataUI(DataGrid dataGrid) {
+        this.dataGrid = dataGrid;
         init();
     }
 
     private void init() {
+        // 导出界面打开前，导出默认数据集校验，数据集为空不退出导出界面
+        if (this.dataGrid == null) {
+            DialogUtil.showTips(null, "导出数据对象为空！");
+            return;
+        }
+        this.dataMap = currentPageData();
+        if (this.dataMap == null || this.dataMap.size() == 0) {
+            DialogUtil.showTips(mainPanel, "没有可供导出的数据结果！");
+            return;
+        }
+        DialogUtil dialogUtil = new DialogUtil();
+        this.tableName = getTableName();
+        this.customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
+        this.customDialog.showDialog(null, this.mainPanel, "Export Data", 500, 240);
         showDefaultName();
         exportLocal();
         exportDingTalk();
         exportWeChat();
+        allPageDataCheckBoxListener();
     }
 
     /**
@@ -92,7 +109,10 @@ public class ExportDataUI {
      * @return boolean
      */
     public boolean ok() {
-        if (dataMap == null || dataMap.size() == 0) {
+        if (this.allData.isSelected()) {
+            this.dataMap = allPageData();
+        }
+        if (this.dataMap == null || this.dataMap.size() == 0) {
             DialogUtil.showTips(mainPanel, "没有可供导出的数据结果！");
             return false;
         }
@@ -319,5 +339,95 @@ public class ExportDataUI {
         }
         //  创建临时文件
         return PluginUtil.temp(fileName, suffix);
+    }
+
+    /**
+     * 获取全部数据集
+     *
+     * @return map 全部数据集
+     */
+    private Map<Integer, List<Object>> allPageData() {
+        return currentPageData();
+    }
+
+
+    /**
+     * 获取当前页数据
+     *
+     * @return map 当前页数据集
+     */
+    private Map<Integer, List<Object>> currentPageData() {
+        // 获取单元格数据
+        Map<Integer, List<Object>> map = null;
+        if (this.dataGrid != null) {
+            map = new LinkedHashMap<>();
+            GridDataHookUp dataHookUp = this.dataGrid.getDataHookup();
+            GridModel model = dataHookUp.getModel();
+            // 获取查询到的数据行
+            int rows = model.getRows().size();
+            // 获取查询到的数据列
+            List<DataConsumer.Column> cols = model.getColumns();
+            // 表头标题
+            List<Object> header = new ArrayList<>();
+            // 遍历行
+            for (int i = 0; i < rows; i++) {
+                List<Object> cellData = new ArrayList<>();
+                // 遍历列
+                for (int j = 0; j < cols.size(); j++) {
+                    // 数据模型行下标
+                    ModelIndex rowIndex = ModelIndex.forRow(model, i);
+                    // 数据模型列下标
+                    ModelIndex colIndex = ModelIndex.forColumn(model, j);
+                    // 数据项
+                    Object obj = model.getValueAt(rowIndex, colIndex);
+                    cellData.add(obj);
+                    // 根据第一行的列下标获取表头标题信息
+                    if (i == 0) {
+                        String colName = cols.get(j).getName();
+                        header.add(colName);
+                    }
+                }
+                // 填充数据，第二行开始填充数据
+                map.put(i + 1, cellData);
+            }
+            if (rows > 0) {
+                // 填充标题
+                map.put(0, header);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获取数据表名称
+     *
+     * @return string 数据表名
+     */
+    private String getTableName() {
+        // 获取操作的数据表表名
+        String tableName = UUID.randomUUID().toString().replaceAll("-", "");
+        if (this.dataGrid != null) {
+            try {
+                tableName = DataGridUtil.getDatabaseTable(this.dataGrid).getName();
+            } catch (Exception ignore) {
+            }
+        }
+        return tableName;
+    }
+
+    /**
+     * 是否导出全部查询结果集事件监听
+     * 导出全部数据，重新加载结果集表，以便导出时获取全部数据集
+     */
+    private void allPageDataCheckBoxListener() {
+        this.allData.addActionListener(e -> {
+            if (this.allData.isSelected()) {
+                GridPagingModel<DataConsumer.Row, DataConsumer.Column> pageModel = this.dataGrid.getDataHookup().getPageModel();
+                pageModel.setPageSize(-1);
+                GridLoader<DataConsumer.Row, DataConsumer.Column> loader = this.dataGrid.getDataHookup().getLoader();
+                GridRequestSource<DataConsumer.Row, DataConsumer.Column> source = GridRequestSource.create(this.dataGrid, (Object) null);
+                loader.load(source, 0);
+            }
+        });
     }
 }

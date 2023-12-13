@@ -38,10 +38,6 @@ public class DialogUtil {
      */
     public class CustomDialog extends JDialog {
 
-        public CustomDialog() {
-
-        }
-
         /**
          * 使对话框在打开的窗体中顶层显示，不受失去鼠标焦点影响
          *
