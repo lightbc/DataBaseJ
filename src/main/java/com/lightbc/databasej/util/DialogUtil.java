@@ -62,6 +62,8 @@ public class DialogUtil {
             this.add(component, BorderLayout.CENTER);
             this.setSize(width, height);
             this.setLocationRelativeTo(parentComponent);
+            // 设置对话框为模态对话框
+            this.setModal(true);
             this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             this.dispose();
             this.show();

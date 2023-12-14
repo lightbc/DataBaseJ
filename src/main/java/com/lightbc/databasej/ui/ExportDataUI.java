@@ -63,15 +63,15 @@ public class ExportDataUI {
             DialogUtil.showTips(mainPanel, "没有可供导出的数据结果！");
             return;
         }
-        DialogUtil dialogUtil = new DialogUtil();
         this.tableName = getTableName();
-        this.customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
-        this.customDialog.showDialog(null, this.mainPanel, "Export Data", 500, 240);
         showDefaultName();
         exportLocal();
         exportDingTalk();
         exportWeChat();
         allPageDataCheckBoxListener();
+        DialogUtil dialogUtil = new DialogUtil();
+        this.customDialog = dialogUtil.new CustomDialog((Frame) ProjectUtil.getWindow());
+        this.customDialog.showDialog(null, this.mainPanel, "Export Data", 500, 240);
     }
 
     /**
